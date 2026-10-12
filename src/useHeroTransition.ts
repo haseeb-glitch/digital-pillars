@@ -1,0 +1,174 @@
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
+
+gsap.registerPlugin(ScrollTrigger);
+
+/**
+ * =====================================================================
+ * HERO → SERVICES SCROLL-DRIVEN TRANSITION HOOK
+ * =====================================================================
+ * 
+ * Implements a single scroll-scrubbed GSAP timeline on a pinned Hero,
+ * smoothly cross-fading the Hero exit and Services entrance.
+ * 
+ * TUNABLE KNOBS (see documentation for adjustments):
+ * 1. SCROLL_DISTANCE: Distance the transition occupies (default: '+=120%', mobile: '+=80%')
+ * 2. SCRUB_SMOOTHING: Smoothing delay in seconds (default: 1s)
+ * 3. STAGGER_GAP: Delay between card/tile movements (0.08s cards, 0.12s tiles)
+ * 4. Y_DISTANCES: Travel offsets (cards: -160, title: 90, feature: 110, tiles: 100)
+ * 5. OVERLAP_TIMES: Start positions on timeline (cards: 0, title: 0.30, feature: 0.40, tiles: 0.50)
+ */
+
+export function useHeroTransition() {
+  const lenisRef = useRef<Lenis | null>(null);
+
+  useEffect(() => {
+    // Accessibility check: Skip all pinning & animation if user prefers reduced motion
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const isMobile = window.innerWidth < 768;
+
+    // ── 1. Lenis Smooth Scroll Setup ──────────────────────────────────
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      touchMultiplier: 1.5,
+      infinite: false,
+    });
+    lenisRef.current = lenis;
+
+    lenis.on('scroll', ScrollTrigger.update);
+    const tickerCallback = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(tickerCallback);
+    gsap.ticker.lagSmoothing(0);
+
+    // ── 2. GSAP Context for Safe React Cleanup ────────────────────────
+    const ctx = gsap.context(() => {
+      const hero = document.querySelector<HTMLElement>('.hero');
+      const heroScene = document.querySelector<HTMLElement>('.hero-scene');
+      const heroCards = gsap.utils.toArray<HTMLElement>('.hero-card');
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const supportsFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      let removeMouseListeners = () => { };
+
+      if (hero && heroScene && heroCards.length) {
+        gsap.set(heroScene, { perspective: 1200, transformStyle: 'preserve-3d' });
+        const depths = [0.65, 1, 0.8, 1.2, 0.9];
+        const cardAnimations = heroCards.map((card, index) => {
+          const depth = depths[index % depths.length];
+          return {
+            rotX: gsap.quickTo(card, 'rotateX', { duration: 0.6, ease: 'power2.out' }),
+            rotY: gsap.quickTo(card, 'rotateY', { duration: 0.6, ease: 'power2.out' }),
+            x: gsap.quickTo(card, 'x', { duration: 0.6, ease: 'power2.out' }),
+            y: gsap.quickTo(card, 'y', { duration: 0.6, ease: 'power2.out' }),
+            depth,
+          };
+        });
+        const onPointerMove = (event: PointerEvent) => {
+          const bounds = hero.getBoundingClientRect();
+          if (bounds.bottom < 0 || bounds.top > window.innerHeight) return;
+          const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
+          const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 2;
+          cardAnimations.forEach((animation) => {
+            animation.rotX(-y * 6 * animation.depth);
+            animation.rotY(x * 6 * animation.depth);
+            animation.x(x * (isMobile ? 8 : 14) * animation.depth);
+            animation.y(y * (isMobile ? 8 : 12) * animation.depth);
+          });
+        };
+        const resetCards = () => cardAnimations.forEach((animation) => {
+          animation.rotX(0);
+          animation.rotY(0);
+          animation.x(0);
+          animation.y(0);
+        });
+        hero.addEventListener('pointermove', onPointerMove);
+        hero.addEventListener('pointerdown', onPointerMove);
+        hero.addEventListener('pointerleave', resetCards);
+        hero.addEventListener('pointerup', resetCards);
+        hero.addEventListener('pointercancel', resetCards);
+        removeMouseListeners = () => {
+          hero.removeEventListener('pointermove', onPointerMove);
+          hero.removeEventListener('pointerdown', onPointerMove);
+          hero.removeEventListener('pointerleave', resetCards);
+          hero.removeEventListener('pointerup', resetCards);
+          hero.removeEventListener('pointercancel', resetCards);
+        };
+      }
+
+      const cardsY = isMobile ? -100 : -160;
+      const titleY = isMobile ? 55 : 90;
+      const featureY = isMobile ? 65 : 110;
+      const scrollDistance = isMobile ? '+=80%' : '+=120%';
+      const timeline = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          trigger: '.hero',
+          start: 'top top',
+          end: scrollDistance,
+          scrub: 1,
+          pin: true,
+          pinSpacing: false,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      timeline
+        .to('.hero-card', { y: cardsY, opacity: 0, scale: 0.94, rotateX: 8, stagger: { each: 0.08, from: 'end' }, ease: 'power2.in', duration: 0.35 }, 0)
+        .to('.hero-bg', { yPercent: -12, duration: 1, ease: 'none' }, 0)
+        .to('.hero-overlay', { opacity: 0.85, duration: 0.5, ease: 'none' }, 0.1)
+        .fromTo('.services-title', { y: titleY, opacity: 0, filter: 'blur(6px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', ease: 'power3.out', duration: 0.25 }, 0.3)
+        .fromTo('.services-feature', { y: featureY, opacity: 0, scale: 0.97 }, { y: 0, opacity: 1, scale: 1, ease: 'power3.out', duration: 0.35 }, 0.4);
+
+      const deviceImage = document.querySelector('.device-feature img');
+      if (deviceImage) {
+        timeline.fromTo(deviceImage, { yPercent: 8 }, { yPercent: 0, ease: 'power3.out', duration: 0.35 }, 0.4);
+      }
+
+      // SERVICES CARDS: scroll-scrubbed left slide, fade and blur with a waterfall stagger.
+      const serviceCards = gsap.utils.toArray<HTMLElement>('.service-mosaic .service-card');
+      if (serviceCards.length) {
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: '.service-mosaic',
+            start: 'top 94%',
+            end: 'top 52%',
+            scrub: 0.35,
+            invalidateOnRefresh: true,
+          },
+        }).fromTo(
+          serviceCards,
+          { x: -160, opacity: 0, filter: 'blur(8px)' },
+          {
+            x: 0,
+            opacity: 1,
+            filter: 'blur(0px)',
+            duration: 0.6,
+            stagger: 0.12,
+            ease: 'power3.out',
+          }
+        );
+      }
+
+      return () => {
+        removeMouseListeners();
+      };
+    });
+
+    // Refresh ScrollTrigger after window load to ensure exact geometries
+    const handleLoad = () => ScrollTrigger.refresh();
+    window.addEventListener('load', handleLoad);
+
+    // ── 3. Cleanup on Unmount ─────────────────────────────────────────
+    return () => {
+      window.removeEventListener('load', handleLoad);
+      ctx.revert();
+      lenis.destroy();
+      lenisRef.current = null;
+    };
+  }, []);
+}

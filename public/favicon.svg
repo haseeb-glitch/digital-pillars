@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <rect width="48" height="48" rx="11" fill="#0a111b"/>
+  <rect width="46" height="46" x="1" y="1" rx="10" stroke="#edcc96" stroke-opacity="0.25" stroke-width="1"/>
+  <!-- Architectural Skyscraper Skyline / Pillars -->
+  <rect x="7" y="38" width="34" height="2" rx="1" fill="#edcc96" fill-opacity="0.8"/>
+  <!-- Central Skyscraper with Spire -->
+  <path d="M23 6C23 5.4 25 5.4 25 6V10H23V6Z" fill="#edcc96"/>
+  <path d="M19 13L24 9L29 13V37H19V13Z" fill="#edcc96"/>
+  <path d="M21.5 15.5H26.5V17.5H21.5V15.5ZM21.5 20.5H26.5V22.5H21.5V20.5ZM21.5 25.5H26.5V27.5H21.5V25.5ZM21.5 30.5H26.5V32.5H21.5V30.5Z" fill="#0a111b" fill-opacity="0.8"/>
+  <!-- Left High-Rise Tower -->
+  <path d="M9 19L17 14V37H9V19Z" fill="#d8b57b"/>
+  <path d="M11 20H15V22H11V20ZM11 25H15V27H11V25ZM11 30H15V32H11V30Z" fill="#0a111b" fill-opacity="0.75"/>
+  <!-- Right High-Rise Tower -->
+  <path d="M31 16L39 21V37H31V16Z" fill="#c49e62"/>
+  <path d="M33 22H37V24H33V22ZM33 27H37V29H33V27ZM33 32H37V34H33V32Z" fill="#0a111b" fill-opacity="0.75"/>
+</svg>

@@ -1,0 +1,62 @@
+DIGITAL PILLARS — UPDATED WEBSITE PACKAGE
+
+QUICK PREVIEW
+1. Extract this ZIP.
+2. Open OPEN-WEBSITE.html in a modern browser.
+All styles, JavaScript and artwork are embedded. No installation is needed.
+
+EDITABLE SOURCE
+src/App.tsx — content, page sections, dashboards and interactions.
+src/styles.css — glass effects, layouts, responsive rules and animations.
+components/testimonials.tsx — six editable review cards and carousel.
+components/ui/ — accessible dialogs, navigation sheets and FAQ accordion.
+public/images/ — optimized artwork, including the portrait city backdrop.
+scripts/build-standalone.mjs — recreates the self-contained HTML preview.
+
+RUN AND EDIT
+Install Node.js 22.13 or newer. In this folder, run:
+  npm install
+  npm run dev
+Open the local address shown by the terminal.
+
+BUILD
+  npm run build
+This rebuilds dist/ and OPEN-WEBSITE.html.
+  npm run preview
+The included dist/ is ready for a static host at the domain root.
+A pnpm lockfile is included for pnpm users.
+
+THIS UPDATE
+- Portrait 720 x 1280 composition based on the 10-second reference.
+- Tower at upper-left, amber skyline, clouds and continuous navy background.
+- Five independent, overlapping glass analytics panels with SVG charts.
+- Stationary backdrop, subtle card float and pointer tilt.
+- Restrained glass blur, thin rims, reflections and opacity differences.
+- Offset two-column mobile services and compact dashboard statistics.
+- Three mixed-width featured projects with a larger center card.
+- Six-card 3D glass testimonial carousel: autoplay, pause, arrows and swipe.
+- Two-column mobile contact composition and compact footer columns.
+- Mobile navigation, service/project dialogs, FAQ and project brief form.
+- Keyboard controls and reduced-motion support.
+
+REFERENCE AND CONTENT
+This recreates the portrait video composition and preserves useful sections
+from the existing website. The AI-generated video changes shapes and text
+between frames; this is a coherent visual recreation, not a pixel-exact copy.
+The original source, fonts and artwork were not provided.
+Unreadable reference text is represented by editable, readable sample copy.
+Names, testimonials, ratings, metrics and project examples are sample content.
+The login dialog is a placeholder; authentication is not connected.
+The FAQ uses fixed answers. The brief form downloads a local text file.
+No brief is emailed or submitted to a server.
+
+CHECKED FOR THIS UPDATE
+- TypeScript validation and production Vite build passed.
+- Browser layouts reviewed at 720 x 1280, 390 x 844, 360 x 800 and 1440 x 900.
+- No page-width overflow or broken loaded images in those previews.
+- Navigation, project brief dialog, FAQ drawer and testimonial controls checked.
+- Standalone HTML passes JavaScript syntax and browser rendering checks.
+- All standalone artwork, including responsive images, is embedded.
+- Desktop, portrait mobile and testimonial screenshots are included.
+
+No API key is required to run this frontend.
