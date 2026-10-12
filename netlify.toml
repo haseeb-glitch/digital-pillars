@@ -1,0 +1,7 @@
+[build]
+  # Invoke pnpm through Corepack so the build works even when no pnpm shim is on PATH
+  command = "corepack pnpm install --frozen-lockfile && corepack pnpm run build"
+  publish = "dist"
+
+[build.environment]
+  COREPACK_ENABLE_DOWNLOAD_PROMPT = "0"
