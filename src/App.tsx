@@ -671,6 +671,34 @@ Digital Pillars Architecture & Digital Agency
             </picture>
             <div className="atmosphere" />
             <div className="sunlight" />
+
+            {/* Slow Flowing Cinematic Cloud Layers */}
+            <div className="hero-clouds-container" aria-hidden="true">
+              {/* Upper slow-drifting ethereal cloud stream across sky */}
+              <div className="hero-clouds-stream-wrap stream-upper">
+                <div className="hero-clouds-stream-track flow-left-slow">
+                  <img src="/images/hero-clouds-stream.jpg" className="cloud-stream-img" alt="" />
+                  <img src="/images/hero-clouds-stream.jpg" className="cloud-stream-img" alt="" />
+                </div>
+              </div>
+
+              {/* Volumetric rolling cloud bank across citadel base */}
+              <div className="hero-clouds-volumetric-wrap">
+                <img src="/images/hero-clouds-volumetric.jpg" className="hero-clouds-volumetric-img flow-billow" alt="" />
+              </div>
+
+              {/* Lower horizon counter-drifting luminous cloud stream */}
+              <div className="hero-clouds-stream-wrap stream-lower">
+                <div className="hero-clouds-stream-track flow-right-slow">
+                  <img src="/images/hero-clouds-stream.jpg" className="cloud-stream-img flip-h" alt="" />
+                  <img src="/images/hero-clouds-stream.jpg" className="cloud-stream-img flip-h" alt="" />
+                </div>
+              </div>
+
+              {/* Atmospheric ambient fog & golden solar mist */}
+              <div className="hero-clouds-ambient-fog" />
+              <div className="hero-clouds-sun-mist" />
+            </div>
           </div>
           <div className="hero-overlay" aria-hidden="true" />
           <div className="ghost-plane plane-one" />
