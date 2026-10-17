@@ -29,7 +29,8 @@ export function useHeroTransition() {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
-    const isMobile = window.innerWidth < 768;
+    const screenW = window.innerWidth;
+    const isMobile = screenW < 768;
 
     // ── 1. Lenis Smooth Scroll Setup ──────────────────────────────────
     const lenis = new Lenis({
@@ -53,9 +54,118 @@ export function useHeroTransition() {
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
       const supportsFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
       let removeMouseListeners = () => { };
+      let introFinished = false;
 
       if (hero && heroScene && heroCards.length) {
         gsap.set(heroScene, { perspective: 1200, transformStyle: 'preserve-3d' });
+
+        // ── 2a. Flying Cards Entrance From Respective Sides ─────────────
+        const heroBounds = hero.getBoundingClientRect();
+        const heroCenterX = heroBounds.left + heroBounds.width / 2;
+
+        const cardFlyConfigs = heroCards.map((card) => {
+          const cardRect = card.getBoundingClientRect();
+          const cardCenterX = cardRect.left + cardRect.width / 2;
+          const isRight = cardCenterX >= heroCenterX;
+
+          // Safe, moderate lateral offset: keeps the whole card 100% complete and visible
+          const startScale = isMobile ? 0.88 : 0.84;
+          const shrinkPerSide = (cardRect.width * (1 - startScale)) / 2;
+
+          let fromX = 0;
+          if (isRight) {
+            const maxRight = window.innerWidth - (cardRect.right - shrinkPerSide) - 20;
+            fromX = Math.max(Math.min(maxRight, isMobile ? 55 : 95), 30);
+          } else {
+            const maxLeft = (cardRect.left + shrinkPerSide) - 20;
+            fromX = -Math.max(Math.min(maxLeft, isMobile ? 55 : 95), 30);
+          }
+
+          const rotY = isRight ? (isMobile ? -8 : -14) : (isMobile ? 8 : 14);
+          const rotZ = isRight ? (isMobile ? 1.5 : 2.5) : (isMobile ? -1.5 : -2.5);
+
+          return {
+            el: card,
+            fromX,
+            rotY,
+            rotZ,
+            startScale,
+            // Bring ALL cards in once together - no staggered lag or half-card delay
+            delay: 0.1,
+            // Reduced pace: relaxed, unhurried, silky-smooth glide
+            duration: isMobile ? 1.25 : 1.45,
+          };
+        });
+
+        const isScrolledAtStart = window.scrollY > 40;
+
+        if (!isScrolledAtStart) {
+          // Set initial starting positions (complete card fully visible, never clipped or cut in half)
+          cardFlyConfigs.forEach(({ el, fromX, rotY, rotZ, startScale }) => {
+            gsap.set(el, {
+              x: fromX,
+              y: 0,
+              rotateY: rotY,
+              rotateZ: rotZ,
+              scale: startScale,
+              opacity: 0,
+              transformPerspective: 1200,
+              transformOrigin: 'center center',
+            });
+          });
+
+          // Orchestrate flying entrance timeline
+          const introTimeline = gsap.timeline({
+            onComplete: () => {
+              introFinished = true;
+              cardFlyConfigs.forEach(({ el }) => {
+                gsap.set(el, { clearProps: 'transformPerspective' });
+              });
+            },
+          });
+
+          cardFlyConfigs.forEach(({ el, fromX, rotY, rotZ, startScale, delay, duration }) => {
+            introTimeline.fromTo(
+              el,
+              {
+                x: fromX,
+                y: 0,
+                rotateY: rotY,
+                rotateZ: rotZ,
+                scale: startScale,
+                opacity: 0,
+              },
+              {
+                x: 0,
+                y: 0,
+                rotateY: 0,
+                rotateZ: 0,
+                scale: 1,
+                opacity: 1,
+                duration,
+                ease: 'power2.out',
+              },
+              delay
+            );
+          });
+
+          // If the user scrolls during the entrance flight, fast-forward to resting position
+          const onEarlyScroll = () => {
+            if (!introFinished) {
+              introTimeline.progress(1);
+              introFinished = true;
+            }
+            window.removeEventListener('scroll', onEarlyScroll);
+          };
+          window.addEventListener('scroll', onEarlyScroll, { passive: true });
+        } else {
+          introFinished = true;
+          heroCards.forEach((card) => {
+            gsap.set(card, { x: 0, y: 0, rotateY: 0, rotateZ: 0, scale: 1, opacity: 1, filter: 'none' });
+          });
+        }
+
+        // ── 2b. 3D Mouse Parallax (activates once cards have landed) ───────
         const depths = [0.65, 1, 0.8, 1.2, 0.9];
         const cardAnimations = heroCards.map((card, index) => {
           const depth = depths[index % depths.length];
@@ -67,7 +177,9 @@ export function useHeroTransition() {
             depth,
           };
         });
+
         const onPointerMove = (event: PointerEvent) => {
+          if (!introFinished) return;
           const bounds = hero.getBoundingClientRect();
           if (bounds.bottom < 0 || bounds.top > window.innerHeight) return;
           const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
@@ -79,12 +191,17 @@ export function useHeroTransition() {
             animation.y(y * (isMobile ? 8 : 12) * animation.depth);
           });
         };
-        const resetCards = () => cardAnimations.forEach((animation) => {
-          animation.rotX(0);
-          animation.rotY(0);
-          animation.x(0);
-          animation.y(0);
-        });
+
+        const resetCards = () => {
+          if (!introFinished) return;
+          cardAnimations.forEach((animation) => {
+            animation.rotX(0);
+            animation.rotY(0);
+            animation.x(0);
+            animation.y(0);
+          });
+        };
+
         hero.addEventListener('pointermove', onPointerMove);
         hero.addEventListener('pointerdown', onPointerMove);
         hero.addEventListener('pointerleave', resetCards);
@@ -99,6 +216,7 @@ export function useHeroTransition() {
         };
       }
 
+      // ── 2c. Scroll-scrubbed Hero Exit & Services Entrance Timeline ──
       const cardsY = isMobile ? -100 : -160;
       const titleY = isMobile ? 55 : 90;
       const featureY = isMobile ? 65 : 110;
@@ -118,7 +236,12 @@ export function useHeroTransition() {
       });
 
       timeline
-        .to('.hero-card', { y: cardsY, opacity: 0, scale: 0.94, rotateX: 8, stagger: { each: 0.08, from: 'end' }, ease: 'power2.in', duration: 0.35 }, 0)
+        .fromTo(
+          '.hero-card',
+          { y: 0, opacity: 1, scale: 1, rotateX: 0 },
+          { y: cardsY, opacity: 0, scale: 0.94, rotateX: 8, stagger: { each: 0.08, from: 'end' }, ease: 'power2.in', duration: 0.35 },
+          0
+        )
         .to('.hero-bg', { yPercent: -12, duration: 1, ease: 'none' }, 0)
         .to('.hero-overlay', { opacity: 0.85, duration: 0.5, ease: 'none' }, 0.1)
         .fromTo('.services-title', { y: titleY, opacity: 0, filter: 'blur(6px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', ease: 'power3.out', duration: 0.25 }, 0.3)
