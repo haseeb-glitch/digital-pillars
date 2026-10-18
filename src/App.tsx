@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { motion, useReducedMotion, useInView, animate, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, ChevronDown, Menu, Play, Globe2, Users2, Layers3, Code2, BarChart3, Bot, MessageCircle, Sparkles, Download, Check, X, Lock, Mail, ShieldCheck, Eye, EyeOff, Building2, Clock, Zap, Star, Send, Smile, Volume2, Keyboard } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, ChevronDown, Menu, Play, Globe2, Users2, Layers3, Code2, BarChart3, Bot, MessageCircle, Sparkles, Download, Check, X, Lock, Mail, ShieldCheck, Eye, EyeOff, Building2, Clock, Zap, Star, Send, Smile, Volume2, Keyboard, Loader2 } from 'lucide-react';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import Testimonials from '@/components/testimonials';
@@ -136,7 +136,7 @@ export const solutionsList: Solution[] = [
     tagline: 'Autonomous intelligence built directly into your operations.',
     summary: 'Deploy bespoke AI workflows, autonomous agents, and smart automations that eliminate friction and convert leads 24/7.',
     detailedDescription: 'Transform customer engagement and operational efficiency with custom AI agents. From 24/7 lead qualification chatbots to automated back-office pipelines, we integrate state-of-the-art LLMs securely into your business ecosystem.',
-    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1200&q=85',
+    image: '/images/service-ai-agents.jpg',
     deliverables: [
       'Custom Autonomous Agent Architecture',
       'RAG Enterprise Knowledge Integrations',
@@ -160,7 +160,7 @@ export const solutionsList: Solution[] = [
     tagline: 'Topical authority engines for compound organic revenue.',
     summary: 'Dominate organic search with technical architecture optimization, topical authority mapping, and high-converting editorial engines.',
     detailedDescription: 'Capture high-intent customer search traffic organically. We construct technical crawl foundations, semantic topical clusters, and authoritative digital PR engines that build lasting search dominance.',
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=85',
+    image: '/images/service-seo-growth.jpg',
     deliverables: [
       'Comprehensive Technical SEO Architecture',
       'Topical Cluster Mapping & Intent Targeting',
@@ -184,7 +184,7 @@ export const solutionsList: Solution[] = [
     tagline: 'High-retention visual assets engineered for social feeds.',
     summary: 'Cinematic short-form video, high-converting motion graphics, and dynamic visual assets engineered to convert.',
     detailedDescription: 'Stop the scroll and drive action with video creative engineered specifically for modern ad algorithms. We combine studio-grade production with direct-response testing to produce compelling, high-converting motion assets.',
-    image: 'https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=1200&q=85',
+    image: '/images/service-creative-video.jpg',
     deliverables: [
       'Short-Form Direct Response Video Production',
       'High-Impact 3D Product Visualizations',
@@ -208,7 +208,7 @@ export const solutionsList: Solution[] = [
     tagline: 'Scientific experimentation to maximize revenue per visitor.',
     summary: 'Turn existing traffic into qualified revenue through behavioral heatmaps, multivariate A/B testing, and frictionless UX design.',
     detailedDescription: 'Maximize the value of every visitor that lands on your site. Through behavioral heatmaps, clickstream analytics, and rigorous A/B experimentation, we systematically remove friction and increase checkout throughput.',
-    image: 'https://images.unsplash.com/photo-1551836022-4c4c79ecde51?auto=format&fit=crop&w=1200&q=85',
+    image: '/images/service-cro.jpg',
     deliverables: [
       'Quantitative Funnel & Heatmap Analysis',
       'Hypothesis-Driven A/B & Multivariate Testing',
@@ -408,6 +408,8 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [modal, setModal] = useState<string | null>(null);
   const [briefSaved, setBriefSaved] = useState(false);
+  const [enquiryStatus, setEnquiryStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [enquiryClientName, setEnquiryClientName] = useState('');
   const [customBudget, setCustomBudget] = useState(false);
   const [faqOpen, setFaqOpen] = useState(false);
   const [faqActiveItem, setFaqActiveItem] = useState<number | null>(null);
@@ -550,6 +552,8 @@ export default function Home() {
 
   function openBrief() {
     setBriefSaved(false);
+    setEnquiryStatus('idle');
+    setEnquiryClientName('');
     setModal('contact');
   }
 
@@ -574,39 +578,88 @@ export default function Home() {
     setActive(n => (n + direction + projects.length) % projects.length);
   }
 
-  function downloadBrief(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSendEnquiry(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setEnquiryStatus('sending');
     const data = new FormData(e.currentTarget);
-    const content = `================================================
-DIGITAL PILLARS — CONFIDENTIAL PROJECT BRIEF
+
+    const name = (data.get('name') as string)?.trim() || 'N/A';
+    const email = (data.get('email') as string)?.trim() || 'N/A';
+    const company = (data.get('company') as string)?.trim() || 'N/A';
+    const service = (data.get('service') as string)?.trim() || 'General Inquiry / Full Ecosystem';
+    const budget = data.get('budget') === 'Custom budget'
+      ? ((data.get('customBudget') as string)?.trim() || 'Custom budget')
+      : ((data.get('budget') as string)?.trim() || 'Flexible / To be scoped');
+    const timeline = (data.get('timeline') as string)?.trim() || '1 - 3 Months';
+    const details = (data.get('details') as string)?.trim() || '';
+
+    setEnquiryClientName(name);
+
+    const emailSubject = `Project Enquiry: ${service} — ${name}${company !== 'N/A' ? ` (${company})` : ''}`;
+    const emailBody = `DIGITAL PILLARS — NEW PROJECT ENQUIRY
 Generated: ${new Date().toLocaleDateString('en-US', { dateStyle: 'full' })}
-================================================
 
+--------------------------------------------------
 CLIENT INFORMATION
-Name:     ${data.get('name') || 'N/A'}
-Email:    ${data.get('email') || 'N/A'}
-Company:  ${data.get('company') || 'N/A'}
+--------------------------------------------------
+Name:     ${name}
+Email:    ${email}
+Company:  ${company}
 
+--------------------------------------------------
 ENGAGEMENT SCOPE
-Service:  ${data.get('service') || 'Not specified'}
-Budget:   ${data.get('budget') === 'Custom budget' ? (data.get('customBudget') || 'Custom budget — amount to be confirmed') : (data.get('budget') || 'Flexible / To be scoped')}
-Timeline: ${data.get('timeline') || '1-3 Months'}
+--------------------------------------------------
+Service:  ${service}
+Budget:   ${budget}
+Timeline: ${timeline}
 
+--------------------------------------------------
 PROJECT VISION & OBJECTIVES
-${data.get('details')}
+--------------------------------------------------
+${details}
 
-================================================
-STATUS: Client brief ready for intake discovery.
-Digital Pillars Architecture & Digital Agency
-================================================
-`;
-    const url = URL.createObjectURL(new Blob([content], { type: 'text/plain' }));
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'digital-pillars-project-brief.txt';
-    a.click();
-    URL.revokeObjectURL(url);
-    setBriefSaved(true);
+--------------------------------------------------
+Submitted via Digital Pillars Project Intake
+To: partners@digitalpillars.agency
+--------------------------------------------------`;
+
+    // Attempt direct background form dispatch
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3500);
+      await fetch('https://formsubmit.co/ajax/partners@digitalpillars.agency', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          _subject: emailSubject,
+          Name: name,
+          Email: email,
+          Company: company,
+          Service: service,
+          Budget: budget,
+          Timeline: timeline,
+          VisionAndGoals: details,
+          _template: 'table'
+        }),
+        signal: controller.signal
+      }).catch(() => null);
+      clearTimeout(timeoutId);
+    } catch {
+      // Ignore background network errors
+    }
+
+    // Launch email composer pre-filled with the exact details addressed to partners@digitalpillars.agency
+    const mailtoUrl = `mailto:partners@digitalpillars.agency?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+    const link = document.createElement('a');
+    link.href = mailtoUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.click();
+
+    setEnquiryStatus('sent');
   }
 
   const categories = [
@@ -1422,7 +1475,7 @@ Digital Pillars Architecture & Digital Agency
             </div>
 
             <div className="brief-modal-form-side">
-              <form className="brief-form-revamped" onSubmit={downloadBrief}>
+              <form className="brief-form-revamped" onSubmit={handleSendEnquiry}>
                 <div className="form-row">
                   <label className="field-block">
                     <span className="field-label">Your Name <span className="req">*</span></span>
@@ -1489,20 +1542,26 @@ Digital Pillars Architecture & Digital Agency
                 </label>
 
                 <div className="form-bottom-actions">
-                  <button className="button gold brief-download-btn" type="submit">
-                    {briefSaved ? (
-                      <><Check size={16} /> Brief Saved to Downloads</>
+                  <button
+                    className="button gold brief-download-btn"
+                    type="submit"
+                    disabled={enquiryStatus === 'sending'}
+                  >
+                    {enquiryStatus === 'sending' ? (
+                      <><Loader2 size={16} className="animate-spin" /> Sending Enquiry...</>
+                    ) : enquiryStatus === 'sent' ? (
+                      <><Check size={16} /> Enquiry Sent Successfully</>
                     ) : (
-                      <><Download size={16} /> Save & Download Project Brief (.txt)</>
+                      <><Send size={16} /> Send Enquiry</>
                     )}
                   </button>
-                  {briefSaved && (
+                  {enquiryStatus === 'sent' && (
                     <div className="brief-success-badge">
-                      <Check size={14} /> Brief saved to your device. Ready to review and distribute.
+                      <Check size={14} /> Thank you, {enquiryClientName || 'there'}! Your enquiry has been sent to <strong>partners@digitalpillars.agency</strong>. Our senior team will review and reply within 24 hours.
                     </div>
                   )}
                   <p className="brief-local-privacy">
-                    <ShieldCheck size={13} /> Your brief is compiled locally in your browser. No third-party data tracking.
+                    <ShieldCheck size={13} /> Routed directly to partners@digitalpillars.agency. Enterprise-grade confidentiality.
                   </p>
                 </div>
               </form>
