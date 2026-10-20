@@ -524,8 +524,21 @@ svg {
   }
 }
 
+.hero .hero-card,
+.hero .hero-card *,
+.hero .hero-metric,
+.hero .hero-metric *,
+.hero-card,
+.hero-card *,
+.hero-metric,
+.hero-metric *,
+.metric-position,
+.metric-position * {
+  cursor: default !important;
+}
+
 .hero-card {
-  cursor: pointer;
+  cursor: default !important;
   transition: z-index 0.2s ease !important;
   will-change: transform, opacity;
 }
@@ -538,7 +551,7 @@ svg {
 }
 
 .hero-metric {
-  cursor: pointer;
+  cursor: default !important;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 0.35s ease,
     border-color 0.35s ease,
@@ -10025,7 +10038,7 @@ body {
     rotate: var(--glass-axis-x, 0) var(--glass-axis-y, 1) 0 var(--glass-angle, 0deg) !important;
     transform-style: preserve-3d !important;
     transition: rotate 0.3s cubic-bezier(0.2, 0.8, 0.3, 1), transform 0.3s cubic-bezier(0.2, 0.8, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease !important;
-    cursor: pointer !important;
+    cursor: default !important;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     will-change: rotate, transform;

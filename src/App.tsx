@@ -741,16 +741,16 @@ To: info@digitalpillars.com
               <a className="button outline" href="#projects">Our Work <ArrowRight size={14} /></a>
             </motion.div>
           </div>
-          <div className="metric-position traffic-position hero-card">
-            <div className="glass hero-metric traffic">
+          <div className="metric-position traffic-position hero-card" style={{ cursor: 'default' }}>
+            <div className="glass hero-metric traffic" style={{ cursor: 'default' }}>
               <div className="dashboard-heading"><span><Mark /> Digital Pillars</span><i>↗</i></div>
               <small>Traffic growth</small>
               <strong>+247<span>%</span></strong>
               <LineChart gold id="traffic-gradient" />
             </div>
           </div>
-          <div className="metric-position conversion-position hero-card">
-            <div className="glass hero-metric conversion">
+          <div className="metric-position conversion-position hero-card" style={{ cursor: 'default' }}>
+            <div className="glass hero-metric conversion" style={{ cursor: 'default' }}>
               <div className="dashboard-heading"><span>Growth Performance</span><i>•••</i></div>
               <div className="dashboard-subhead"><b>Built to grow.</b><span>Overview <ChevronRight size={10} /></span></div>
               <LineChart blue id="growth-gradient" />
@@ -762,23 +762,23 @@ To: info@digitalpillars.com
               </div>
             </div>
           </div>
-          <div className="metric-position uptime-position hero-card">
-            <div className="glass hero-metric uptime">
+          <div className="metric-position uptime-position hero-card" style={{ cursor: 'default' }}>
+            <div className="glass hero-metric uptime" style={{ cursor: 'default' }}>
               <div className="dashboard-heading"><span><Mark /> Conversion Overview</span><i>•••</i></div>
               <div className="dashboard-project"><span><small>Always connected</small><b>99.99%</b><small>Uptime</small></span><img src="/images/citadel.png" alt="" /></div>
               <div className="dashboard-summary"><span><small>Conversion</small><b>3.2%</b></span><span><small>Growth</small><b>+247%</b></span></div>
               <div className="dashboard-rings"><span><small>Performance</small><b>98%</b></span><Ring number="68%" small /><Ring number="98%" small /></div>
             </div>
           </div>
-          <div className="metric-position latency-position hero-card">
-            <div className="glass hero-metric latency">
+          <div className="metric-position latency-position hero-card" style={{ cursor: 'default' }}>
+            <div className="glass hero-metric latency" style={{ cursor: 'default' }}>
               <div className="dashboard-heading"><span>Fast · Reliable</span><i>↗</i></div>
               <strong>98<span>ms</span></strong>
               <LineChart blue id="latency-gradient" />
             </div>
           </div>
-          <div className="metric-position return-position hero-card">
-            <div className="glass hero-metric return-card">
+          <div className="metric-position return-position hero-card" style={{ cursor: 'default' }}>
+            <div className="glass hero-metric return-card" style={{ cursor: 'default' }}>
               <div className="dashboard-heading"><span>Digital Connections</span><i>↗</i></div>
               <strong>3,331</strong>
               <LineChart id="connections-gradient" />
