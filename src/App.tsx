@@ -486,7 +486,7 @@ export default function Home() {
       botReply = 'You can prepare an instant confidential Project Brief or connect with our team directly. Scope discovery begins within 24 hours.';
       isBriefAction = true;
     } else if (lower.includes('contact') || lower.includes('email') || lower.includes('phone') || lower.includes('reach')) {
-      botReply = 'Reach our Global Intake Desk directly at partners@digitalpillars.agency, or use our Project Brief intake tool.';
+      botReply = 'Reach our Global Intake Desk directly at info@digitalpillars.com, or use our Project Brief intake tool.';
       isBriefAction = true;
     } else {
       botReply = `Thanks for asking. For "${query}", our senior leads can structure a tailored proposal. Would you like to prepare a project brief?`;
@@ -620,14 +620,14 @@ ${details}
 
 --------------------------------------------------
 Submitted via Digital Pillars Project Intake
-To: partners@digitalpillars.agency
+To: info@digitalpillars.com
 --------------------------------------------------`;
 
     // Attempt direct background form dispatch
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 3500);
-      await fetch('https://formsubmit.co/ajax/partners@digitalpillars.agency', {
+      await fetch('https://formsubmit.co/ajax/info@digitalpillars.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -651,8 +651,8 @@ To: partners@digitalpillars.agency
       // Ignore background network errors
     }
 
-    // Launch email composer pre-filled with the exact details addressed to partners@digitalpillars.agency
-    const mailtoUrl = `mailto:partners@digitalpillars.agency?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+    // Launch email composer pre-filled with the exact details addressed to info@digitalpillars.com
+    const mailtoUrl = `mailto:info@digitalpillars.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
     const link = document.createElement('a');
     link.href = mailtoUrl;
     link.target = '_blank';
@@ -1469,7 +1469,7 @@ To: partners@digitalpillars.agency
               </div>
               <div className="brief-contact-card">
                 <span className="contact-card-label">Global Intake Desk</span>
-                <span className="contact-card-val">partners@digitalpillars.agency</span>
+                <span className="contact-card-val">info@digitalpillars.com</span>
                 <span className="contact-card-sub">New York / London / Dubai / Zurich</span>
               </div>
             </div>
@@ -1557,11 +1557,11 @@ To: partners@digitalpillars.agency
                   </button>
                   {enquiryStatus === 'sent' && (
                     <div className="brief-success-badge">
-                      <Check size={14} /> Thank you, {enquiryClientName || 'there'}! Your enquiry has been sent to <strong>partners@digitalpillars.agency</strong>. Our senior team will review and reply within 24 hours.
+                      <Check size={14} /> Thank you, {enquiryClientName || 'there'}! Your enquiry has been sent to <strong>info@digitalpillars.com</strong>. Our senior team will review and reply within 24 hours.
                     </div>
                   )}
                   <p className="brief-local-privacy">
-                    <ShieldCheck size={13} /> Routed directly to partners@digitalpillars.agency. Enterprise-grade confidentiality.
+                    <ShieldCheck size={13} /> Routed directly to info@digitalpillars.com. Enterprise-grade confidentiality.
                   </p>
                 </div>
               </form>
