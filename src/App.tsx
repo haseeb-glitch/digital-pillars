@@ -517,8 +517,10 @@ export default function Home() {
 
   function glassPointer(event: React.PointerEvent) {
     if (reduce) return;
+    if ((event.target as Element).closest('button, a, input, select, textarea, .card-footer-row')) return;
     const card = (event.target as Element).closest<HTMLElement>('.glass');
     if (!card) return;
+    if (card.classList.contains('is-expanded')) return;
     const r = card.getBoundingClientRect(), x = (event.clientX - r.left) / r.width, y = (event.clientY - r.top) / r.height;
     card.style.setProperty('--glass-x', `${x * 100}%`);
     card.style.setProperty('--glass-y', `${y * 100}%`);
@@ -890,6 +892,7 @@ To: info@digitalpillars.com
                       <p>{s.detailedDescription}</p>
                       <div className="card-footer-row">
                         <button
+                          type="button"
                           className="small-button cta-pill"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -899,6 +902,7 @@ To: info@digitalpillars.com
                           Let’s Talk <ArrowRight size={13} style={{ marginLeft: 3 }} />
                         </button>
                         <button
+                          type="button"
                           className="card-circle-arrow"
                           aria-label={`Collapse ${s.title}`}
                           onClick={(e) => {
@@ -940,6 +944,7 @@ To: info@digitalpillars.com
                   <p>{s.summary}</p>
                   <div className="card-footer-row">
                     <button
+                      type="button"
                       className="small-button"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -949,6 +954,7 @@ To: info@digitalpillars.com
                       {s.buttonText}
                     </button>
                     <button
+                      type="button"
                       className="card-circle-arrow"
                       aria-label={`Open ${s.title} details`}
                       onClick={(e) => {

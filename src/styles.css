@@ -1397,64 +1397,105 @@ svg {
   justify-content: space-between;
   gap: 12px;
   margin-top: auto;
+  position: relative !important;
+  z-index: 10 !important;
+  pointer-events: auto !important;
 }
 
 .service-card .small-button {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 18px;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 10px 22px;
   border-radius: 999px;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: -0.01em;
   color: #e2e8f0;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  cursor: pointer;
-  transition: all 0.25s ease;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 12 !important;
+  pointer-events: auto !important;
+  user-select: none;
+  touch-action: manipulation;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.service-card .small-button * {
+  pointer-events: none !important;
+}
+
+.service-card .small-button:active {
+  transform: scale(0.96) !important;
 }
 
 .service-card:hover .small-button,
 .service-card .small-button:hover {
-  background: rgba(235, 198, 141, 0.16);
-  border-color: rgba(235, 198, 141, 0.45);
+  background: rgba(235, 198, 141, 0.22);
+  border-color: rgba(235, 198, 141, 0.55);
   color: #fff;
+  box-shadow: 0 4px 16px rgba(235, 198, 141, 0.15);
 }
 
 .service-card .small-button.cta-pill {
-  background: rgba(235, 198, 141, 0.18);
+  background: rgba(235, 198, 141, 0.22);
   border-color: var(--gold);
   color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(235, 198, 141, 0.15);
 }
 
 .service-card .small-button.cta-pill:hover {
-  background: var(--gold);
-  color: #121820;
+  background: var(--gold) !important;
+  border-color: var(--gold) !important;
+  color: #121820 !important;
+  box-shadow: 0 6px 22px rgba(235, 198, 141, 0.35) !important;
+  transform: translateY(-1px) !important;
+}
+
+.service-card .small-button.cta-pill:active {
+  transform: scale(0.96) !important;
 }
 
 .card-circle-arrow {
-  width: 34px;
-  height: 34px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.07);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: #cad5e1;
-  cursor: pointer;
-  transition: all 0.25s ease;
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 12 !important;
+  pointer-events: auto !important;
+  user-select: none;
+  touch-action: manipulation;
+  transition: all 0.2s ease;
   flex-shrink: 0;
   padding: 0;
 }
 
+.card-circle-arrow * {
+  pointer-events: none !important;
+}
+
 .service-card:hover .card-circle-arrow,
 .card-circle-arrow:hover {
-  border-color: rgba(235, 198, 141, 0.6);
-  background: rgba(235, 198, 141, 0.2);
+  border-color: rgba(235, 198, 141, 0.7);
+  background: rgba(235, 198, 141, 0.25);
   color: #fff;
-  transform: translateX(2px);
+  transform: scale(1.06);
+}
+
+.card-circle-arrow:active {
+  transform: scale(0.94) !important;
 }
 
 /* Dynamically Enlarged Card View (Vertical Expansion In-Place) */
@@ -8622,15 +8663,23 @@ body {
 }
 
 /* Specific Section Card Touch Reactions for Mobile */
-.service-card:active,
-.service-card.is-touched {
-  transform: translateY(-3px) !important;
+.service-card:not(.is-expanded):active,
+.service-card:not(.is-expanded).is-touched {
+  transform: translateY(-8px) translateZ(24px) scale(1.015) !important;
   border-color: rgba(235, 198, 141, 0.5) !important;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
 }
 
-.service-card:active .small-button,
-.service-card.is-touched .small-button {
+.service-card.is-expanded,
+.service-card.is-expanded:hover,
+.service-card.is-expanded:active,
+.service-card.is-expanded.is-touched {
+  transform: none !important;
+  rotate: none !important;
+}
+
+.service-card:active .small-button:not(.cta-pill),
+.service-card.is-touched .small-button:not(.cta-pill) {
   background: rgba(235, 198, 141, 0.2) !important;
   border-color: rgba(235, 198, 141, 0.6) !important;
   color: #fff !important;
@@ -8641,7 +8690,6 @@ body {
   border-color: rgba(235, 198, 141, 0.7) !important;
   background: rgba(235, 198, 141, 0.25) !important;
   color: #fff !important;
-  transform: translateX(2px) !important;
 }
 
 .project-card:active,
@@ -9060,13 +9108,18 @@ body {
 }
 
 /* Dynamic expanded card */
-.services .service-card.is-expanded {
+.services .service-card.is-expanded,
+.services .service-card.is-expanded:hover,
+.services .service-card.is-expanded:active,
+.services .service-card.is-expanded.is-touched {
   background: radial-gradient(130% 120% at 30% 0%, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.025) 35%, rgba(11, 21, 36, 0.85) 100%) !important;
   border-color: rgba(180, 220, 255, 0.35) !important;
   box-shadow:
     0 32px 75px -12px rgba(0, 0, 0, 0.88),
     0 0 55px 0 rgba(70, 150, 255, 0.3),
     inset 0 1px 2px 0 rgba(255, 255, 255, 0.55) !important;
+  transform: none !important;
+  rotate: none !important;
 }
 
 /* 4. Device Feature Card Glassmorphism */
@@ -10481,9 +10534,10 @@ body {
   }
 
   .service-card .small-button {
-    height: 38px !important;
-    padding: 0 18px !important;
-    font-size: 12.5px !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 0 20px !important;
+    font-size: 13px !important;
     font-weight: 600 !important;
     border-radius: 999px !important;
     background: rgba(255, 255, 255, 0.08) !important;
@@ -10493,38 +10547,72 @@ body {
     align-items: center !important;
     justify-content: center !important;
     white-space: nowrap !important;
-    transition: all 0.25s ease !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 12 !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .service-card .small-button * {
+    pointer-events: none !important;
+  }
+
+  .service-card .small-button:active {
+    transform: scale(0.96) !important;
+  }
+
+  .service-card .small-button.cta-pill {
+    background: rgba(235, 198, 141, 0.25) !important;
+    border-color: var(--gold) !important;
+    color: #ffffff !important;
+  }
+
+  .service-card .small-button.cta-pill:active {
+    background: var(--gold) !important;
+    color: #121820 !important;
   }
 
   .service-card:hover .small-button,
   .service-card:active .small-button,
   .service-card.is-touched .small-button {
-    background: rgba(235, 198, 141, 0.2) !important;
+    background: rgba(235, 198, 141, 0.22) !important;
     border-color: rgba(235, 198, 141, 0.6) !important;
     color: #ffffff !important;
   }
 
   .service-card .card-circle-arrow {
-    width: 38px !important;
-    height: 38px !important;
+    width: 42px !important;
+    height: 42px !important;
     border-radius: 50% !important;
-    background: rgba(255, 255, 255, 0.06) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    background: rgba(255, 255, 255, 0.07) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
     color: #cad5e1 !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    flex-shrink: 0 !important;
-    transition: all 0.25s ease !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 12 !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .service-card .card-circle-arrow * {
+    pointer-events: none !important;
+  }
+
+  .service-card .card-circle-arrow:active {
+    transform: scale(0.94) !important;
   }
 
   .service-card:hover .card-circle-arrow,
-  .service-card:active .card-circle-arrow,
-  .service-card.is-touched .card-circle-arrow {
+  .service-card .card-circle-arrow:hover {
     border-color: rgba(235, 198, 141, 0.7) !important;
     background: rgba(235, 198, 141, 0.25) !important;
     color: #ffffff !important;
-    transform: translateX(3px) !important;
   }
 
   /* Dynamically Enlarged Card View (In-Place Mobile Expansion) */
