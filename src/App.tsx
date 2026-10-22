@@ -399,7 +399,6 @@ function Bars() { return <div className="bars" aria-label="Increasing conversion
 function Ring({ number = '98%', small = false }: { number?: string, small?: boolean }) { return <span className={'gauge-ring ' + (small ? 'small' : '')}><svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="21" stroke="currentColor" strokeOpacity=".15" fill="none" strokeWidth="4" /><circle cx="26" cy="26" r="21" fill="none" stroke="currentColor" strokeWidth="4" strokeDasharray="116 132" transform="rotate(-90 26 26)" /></svg><b>{number}</b></span> }
 
 export default function Home() {
-  const [scene, setScene] = useState(0);
   const [active, setActive] = useState(0);
   const [projectDirection, setProjectDirection] = useState(1);
   const [expandedSolution, setExpandedSolution] = useState<string | null>('web-dev');
@@ -707,7 +706,7 @@ To: info@digitalpillars.com
       onPointerOut={glassOut}
     >
       <section
-        className={'hero scene-' + scene}
+        className="hero scene-0"
         id="home"
         onPointerDown={parallax}
         onPointerMove={parallax}
@@ -792,11 +791,6 @@ To: info@digitalpillars.com
           </div>
         </div>
         <div className="hero-fade" />
-        <div className="pagination hero-pagination" aria-label="Hero scene">
-          {[0, 1, 2].map(n => (
-            <button key={n} aria-label={`Show hero scene ${n + 1}`} aria-pressed={n === scene} className={n === scene ? 'selected' : ''} onClick={() => setScene(n)} />
-          ))}
-        </div>
       </section>
 
       <div className="page-body">

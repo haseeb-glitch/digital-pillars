@@ -6831,28 +6831,32 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1px;
-  background: #c8d7e326;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 5px;
-  overflow: hidden
+  overflow: hidden;
+  margin: 10px 0;
 }
 
 .dashboard-summary>span {
-  background: #bdccdcb5;
+  background: rgba(255, 255, 255, 0.03);
   padding: 10px 12px;
-  color: #172d3c
+  color: #ffffff;
 }
 
 .dashboard-summary small {
-  color: #344c5d;
+  color: #b5c5d0;
   font-size: 8px;
-  margin: 0
+  margin: 0;
+  display: block;
 }
 
 .dashboard-summary b {
   font-weight: 500;
   font-size: 20px;
   display: block;
-  margin-top: 4px
+  margin-top: 4px;
+  color: #ffffff;
 }
 
 .dashboard-rings {
@@ -10256,6 +10260,15 @@ body {
     padding: 3px 0 !important;
     border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: transparent !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-radius: 0 !important;
+  }
+
+  .dashboard-summary>span {
+    background: transparent !important;
+    padding: 0 !important;
   }
 
   .dashboard-summary b {
