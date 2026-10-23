@@ -765,8 +765,8 @@ To: info@digitalpillars.com
           </div>
           <div className="metric-position uptime-position hero-card" style={{ cursor: 'default' }}>
             <div className="glass hero-metric uptime" style={{ cursor: 'default' }}>
-              <div className="dashboard-heading"><span><Mark /> Conversion Overview</span><i>•••</i></div>
-              <div className="dashboard-project"><span><small>Always connected</small><b>99.99%</b><small>Uptime</small></span><img src="/images/citadel.png" alt="" /></div>
+              <div className="dashboard-heading"><span><Mark /> Conversion Overview</span></div>
+              <div className="dashboard-project"><span><small>Always connected</small><b>99.99%</b><small>Uptime</small></span></div>
               <div className="dashboard-summary"><span><small>Conversion</small><b>3.2%</b></span><span><small>Growth</small><b>+247%</b></span></div>
               <div className="dashboard-rings"><span><small>Performance</small><b>98%</b></span><Ring number="68%" small /><Ring number="98%" small /></div>
             </div>

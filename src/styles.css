@@ -6846,11 +6846,11 @@ body {
 }
 
 .dashboard-project {
-  display: grid;
-  grid-template-columns: 1fr .85fr;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 10px;
   margin: 12px 0;
-  align-items: center
 }
 
 .dashboard-project img {
