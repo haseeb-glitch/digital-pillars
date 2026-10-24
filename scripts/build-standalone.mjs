@@ -15,6 +15,12 @@ for(const name of await readdir(path.join(root,'public/images'))){
  css=css.replaceAll('/images/'+name,uri);
 }
 if(js.includes('/images/'))throw new Error('A non-embedded image reference remains.');
+try {
+  const videoUri = 'data:video/mp4;base64,' + (await readFile(path.join(root, 'public/videos/video-project-3.mp4'))).toString('base64');
+  js = js.replaceAll('/videos/video-project-3.mp4', videoUri);
+} catch (err) {
+  console.warn('Could not embed video into standalone preview:', err);
+}
 const favicon='data:image/svg+xml;base64,'+(await readFile(path.join(root,'public/favicon.svg'))).toString('base64');
 html=html.replace(/(?:\.\/|\/)favicon\.svg/g,()=>favicon)
  .replace(/<script[^>]+src="[^"]+"[^>]*><\/script>/,()=>'<script type="module">'+js.replaceAll('</script','<\\/script')+'</script>')

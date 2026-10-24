@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { motion, useReducedMotion, useInView, animate, AnimatePresence } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, ChevronDown, Menu, Play, Globe2, Users2, Layers3, Code2, BarChart3, Bot, MessageCircle, Sparkles, Download, Check, X, Lock, Mail, ShieldCheck, Eye, EyeOff, Building2, Clock, Zap, Star, Send, Smile, Volume2, Keyboard, Loader2 } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, ChevronDown, Menu, Play, Pause, Maximize2, Globe2, Users2, Layers3, Code2, BarChart3, Bot, MessageCircle, Sparkles, Download, Check, X, Lock, Mail, ShieldCheck, Eye, EyeOff, Building2, Clock, Zap, Star, Send, Smile, Volume2, Keyboard, Loader2 } from 'lucide-react';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import Testimonials from '@/components/testimonials';
@@ -421,6 +421,26 @@ export default function Home() {
   const projectDragRef = useRef<{ x: number; y: number } | null>(null);
   const reduce = useReducedMotion();
 
+  const [showServicesVideo, setShowServicesVideo] = useState(false);
+  const servicesVideoRef = useRef<HTMLVideoElement>(null);
+  const ambientVideoRef = useRef<HTMLVideoElement>(null);
+
+  const toggleServicesVideo = () => {
+    setShowServicesVideo(prev => {
+      const next = !prev;
+      if (next) {
+        setTimeout(() => {
+          servicesVideoRef.current?.play().catch(() => {});
+          ambientVideoRef.current?.play().catch(() => {});
+        }, 60);
+      } else {
+        servicesVideoRef.current?.pause();
+        ambientVideoRef.current?.pause();
+      }
+      return next;
+    });
+  };
+
   useHeroTransition();
   useScrollAnimations();
 
@@ -832,22 +852,121 @@ To: info@digitalpillars.com
               <p>Leave lasting impressions. We build the digital experiences that move your business and your brand forward.</p>
               <div className="button-row">
                 <button className="button gold" onClick={() => viewSolutionDetail('web-dev')}>Explore Solutions</button>
-                <button className="round-button" aria-label="Explore our approach" onClick={() => setModal('approach')}><Play size={14} /></button>
+                <button
+                  className={`round-button ${showServicesVideo ? 'active-video' : ''}`}
+                  aria-label={showServicesVideo ? "Pause showcase video" : "Watch showcase video"}
+                  onClick={toggleServicesVideo}
+                  title={showServicesVideo ? "Pause showcase video" : "Play showcase video"}
+                >
+                  {showServicesVideo ? <Pause size={14} /> : <Play size={14} />}
+                </button>
               </div>
             </div>
-            <div className="device-feature glass">
+            <div className={`device-feature glass ${showServicesVideo ? 'video-active' : ''}`}>
               <span className="glass-rim-glint glint-top" aria-hidden="true" />
-              <img src="/images/devices.webp" alt="Desktop monitor, tablet and mobile phone showing digital analytics" loading="lazy" />
-              <div className="device-float device-stat glass">
+              <img
+                src="/images/devices.webp"
+                alt="Desktop monitor, tablet and mobile phone showing digital analytics"
+                loading="lazy"
+                className={`device-preview-img ${showServicesVideo ? 'device-img-dimmed' : ''}`}
+                onClick={!showServicesVideo ? toggleServicesVideo : undefined}
+                style={{ cursor: !showServicesVideo ? 'pointer' : 'default' }}
+              />
+
+              {!showServicesVideo && (
+                <button
+                  type="button"
+                  className="device-play-trigger"
+                  aria-label="Play showcase video"
+                  onClick={toggleServicesVideo}
+                >
+                  <span className="device-play-trigger-icon">
+                    <Play size={18} fill="currentColor" />
+                  </span>
+                  <span className="device-play-trigger-text">Watch Showcase</span>
+                </button>
+              )}
+
+              <div className={`services-video-overlay ${showServicesVideo ? 'is-visible' : ''}`}>
+                <video
+                  ref={ambientVideoRef}
+                  className="services-video-ambient"
+                  src="/videos/video-project-3.mp4"
+                  muted
+                  loop
+                  playsInline
+                  aria-hidden="true"
+                />
+
+                <div className="services-video-inner">
+                  <div className="services-video-header">
+                    <div className="services-video-tag">
+                      <span className="services-video-dot" />
+                      <span>Showcase Reel</span>
+                    </div>
+                    <div className="services-video-actions">
+                      <button
+                        type="button"
+                        className="services-video-action-btn"
+                        title="Expand to Fullscreen / Modal"
+                        aria-label="Expand video in modal"
+                        onClick={() => setModal('services-video')}
+                      >
+                        <Maximize2 size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        className="services-video-action-btn"
+                        title="Close video preview"
+                        aria-label="Close video"
+                        onClick={() => {
+                          servicesVideoRef.current?.pause();
+                          ambientVideoRef.current?.pause();
+                          setShowServicesVideo(false);
+                        }}
+                      >
+                        <X size={15} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="services-video-frame">
+                    <video
+                      ref={servicesVideoRef}
+                      className="services-video-player"
+                      src="/videos/video-project-3.mp4"
+                      controls
+                      autoPlay
+                      playsInline
+                      preload="auto"
+                      onPlay={() => {
+                        ambientVideoRef.current?.play().catch(() => {});
+                      }}
+                      onPause={() => {
+                        ambientVideoRef.current?.pause();
+                      }}
+                      onEnded={() => {
+                        ambientVideoRef.current?.pause();
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className={`device-float device-stat glass ${showServicesVideo ? 'device-float-hidden' : ''}`}>
                 <small>Performance</small>
                 <b>+247%</b>
                 <span>Built for growth</span>
               </div>
-              <div className="device-float device-note glass">
+              <div className={`device-float device-note glass ${showServicesVideo ? 'device-float-hidden' : ''}`}>
                 <Globe2 />
                 <span><b>Digital experiences</b><small>One vision. Every screen.</small></span>
               </div>
-              <button className="device-arrow" aria-label="View website development solution" onClick={() => viewSolutionDetail('web-dev')}>
+              <button
+                className={`device-arrow ${showServicesVideo ? 'device-float-hidden' : ''}`}
+                aria-label="View website development solution"
+                onClick={() => viewSolutionDetail('web-dev')}
+              >
                 <ChevronRight size={18} />
               </button>
             </div>
@@ -1427,7 +1546,7 @@ To: info@digitalpillars.com
     </Sheet>
 
     <Dialog open={!!modal} onOpenChange={v => { if (!v) setModal(null); }}>
-      <DialogContent showCloseButton={modal !== 'contact' && modal !== 'login'} className={'detail-dialog glass ' + (modal === 'contact' ? 'brief-dialog' : modal === 'login' ? 'login-dialog' : '')}>
+      <DialogContent showCloseButton={modal !== 'contact' && modal !== 'login'} className={'detail-dialog glass ' + (modal === 'contact' ? 'brief-dialog' : modal === 'login' ? 'login-dialog' : modal === 'services-video' ? 'video-modal-dialog-frame' : '')}>
         {modal === 'contact' ? (
           <div className="brief-modal-shell">
             <DialogClose className="brief-close-button" aria-label="Close project brief">
@@ -1737,6 +1856,24 @@ To: info@digitalpillars.com
             </div>
             <button className="button gold" onClick={openBrief}>Let’s Talk <ArrowRight size={15} /></button>
           </>
+        ) : modal === 'services-video' ? (
+          <div className="services-video-modal-dialog">
+            <div className="services-video-modal-header">
+              <DialogTitle className="services-video-modal-title">Digital Solutions Showcase</DialogTitle>
+              <DialogDescription className="services-video-modal-desc">
+                Complete digital experiences engineered for modern brands.
+              </DialogDescription>
+            </div>
+            <div className="services-video-modal-body">
+              <video
+                src="/videos/video-project-3.mp4"
+                controls
+                autoPlay
+                playsInline
+                className="services-video-modal-player"
+              />
+            </div>
+          </div>
         ) : modal === 'privacy' ? (
           <>
             <DialogTitle>Your Privacy</DialogTitle>

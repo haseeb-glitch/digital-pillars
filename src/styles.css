@@ -10682,3 +10682,293 @@ body {
     font-size: 8px !important;
   }
 }
+
+/* -------------------------------------------------------------
+   Services Section - Interactive Video Showcase (Video Project 3)
+------------------------------------------------------------- */
+.round-button.active-video {
+  background: rgba(234, 201, 146, 0.24) !important;
+  border-color: rgba(234, 201, 146, 0.7) !important;
+  color: #f7dfba !important;
+  box-shadow: 0 0 18px rgba(234, 201, 146, 0.4), inset 0 0 8px rgba(234, 201, 146, 0.25) !important;
+  animation: pulseGoldButton 2.4s infinite ease-in-out;
+}
+
+@keyframes pulseGoldButton {
+  0%, 100% {
+    box-shadow: 0 0 14px rgba(234, 201, 146, 0.35), inset 0 0 6px rgba(234, 201, 146, 0.2);
+    transform: translateY(0);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(234, 201, 146, 0.65), inset 0 0 10px rgba(234, 201, 146, 0.4);
+    transform: translateY(-1px);
+  }
+}
+
+.device-preview-img {
+  transition: opacity 0.4s ease, filter 0.4s ease;
+  display: block;
+}
+
+.device-preview-img.device-img-dimmed {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Clickable play badge over device image */
+.device-play-trigger {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: rgba(12, 22, 36, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6), 0 0 24px rgba(234, 201, 146, 0.25);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0.94;
+}
+
+.device-play-trigger:hover {
+  background: rgba(18, 32, 52, 0.96);
+  border-color: rgba(234, 201, 146, 0.65);
+  color: #f7dfba;
+  transform: translate(-50%, -50%) scale(1.06);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.7), 0 0 32px rgba(234, 201, 146, 0.45);
+}
+
+.device-play-trigger-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #edcc96, #b88d48);
+  color: #0c1522;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 2px;
+}
+
+/* Video overlay inside device-feature */
+.services-video-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(7, 13, 22, 0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.services-video-overlay.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Atmospheric blurred video backdrop */
+.services-video-ambient {
+  position: absolute;
+  inset: -15%;
+  width: 130%;
+  height: 130%;
+  object-fit: cover;
+  filter: blur(36px) brightness(0.35) saturate(1.4);
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.services-video-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 12px 14px 14px;
+  box-sizing: border-box;
+}
+
+.services-video-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  z-index: 3;
+}
+
+.services-video-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #edcc96;
+  background: rgba(237, 204, 150, 0.12);
+  border: 1px solid rgba(237, 204, 150, 0.28);
+  padding: 4px 10px;
+  border-radius: 999px;
+  backdrop-filter: blur(10px);
+}
+
+.services-video-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #edcc96;
+  box-shadow: 0 0 8px #edcc96;
+  animation: pulseVideoDot 1.8s infinite;
+}
+
+@keyframes pulseVideoDot {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+.services-video-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.services-video-action-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #dbe4ee;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.services-video-action-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border-color: rgba(234, 201, 146, 0.45);
+  transform: scale(1.06);
+}
+
+.services-video-frame {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.services-video-player {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 7px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+  background: #000;
+}
+
+/* Smooth fade out for floating elements when video is active */
+.device-float-hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(8px) scale(0.92) !important;
+  transition: opacity 0.3s ease, transform 0.3s ease !important;
+}
+
+/* Modal video view */
+.video-modal-dialog-frame {
+  max-width: 760px !important;
+  width: 92vw !important;
+  padding: 24px !important;
+  background: linear-gradient(145deg, #0d1724f8, #070c14fd) !important;
+}
+
+.services-video-modal-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.services-video-modal-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.services-video-modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #f7dfba;
+  letter-spacing: -0.02em;
+}
+
+.services-video-modal-desc {
+  font-size: 14px;
+  color: #8fa1b4;
+}
+
+.services-video-modal-body {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 10px;
+}
+
+.services-video-modal-player {
+  max-width: 100%;
+  max-height: 70vh;
+  width: auto;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.75);
+}
+
+@media (max-width: 768px) {
+  .services-video-inner {
+    padding: 8px 10px 10px;
+  }
+
+  .device-play-trigger {
+    padding: 8px 14px;
+    font-size: 11px;
+    gap: 8px;
+  }
+
+  .device-play-trigger-icon {
+    width: 26px;
+    height: 26px;
+  }
+}
