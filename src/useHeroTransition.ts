@@ -236,14 +236,46 @@ export function useHeroTransition() {
       });
 
       timeline
+        // Slow zoom in on the hero art (citadel & radiant clouds expand and draw closer)
+        .fromTo(
+          '.hero-art',
+          { scale: 1, transformOrigin: isMobile ? '58% 38%' : '54% 45%' },
+          {
+            scale: isMobile ? 1.24 : 1.32,
+            duration: 1,
+            ease: 'none',
+          },
+          0
+        )
+        // Gentle background vertical parallax
+        .to('.hero-bg', { yPercent: isMobile ? -8 : -10, duration: 1, ease: 'none' }, 0)
+        // Cloud sunlight glow expands as clouds draw nearer
+        .to('.sunlight', { scale: 1.35, opacity: 0.9, duration: 1, ease: 'none', transformOrigin: 'center center' }, 0)
+        // Ambient glass ghost-planes dissolve and float away
+        .to('.ghost-plane', { y: -60, scale: 0.88, opacity: 0, duration: 0.3, ease: 'power2.in' }, 0)
+        // Foreground hero-copy recedes away into the distance ("while you are going away")
+        .fromTo(
+          '.hero-copy',
+          { y: 0, opacity: 1, scale: 1, filter: 'blur(0px)' },
+          {
+            y: isMobile ? -50 : -85,
+            opacity: 0,
+            scale: 0.92,
+            filter: 'blur(6px)',
+            ease: 'power2.in',
+            duration: 0.35,
+          },
+          0
+        )
+        // Floating metric cards recede and drift away in 3D
         .fromTo(
           '.hero-card',
           { y: 0, opacity: 1, scale: 1, rotateX: 0 },
-          { y: cardsY, opacity: 0, scale: 0.94, rotateX: 8, stagger: { each: 0.08, from: 'end' }, ease: 'power2.in', duration: 0.35 },
+          { y: cardsY, opacity: 0, scale: 0.90, rotateX: 8, stagger: { each: 0.08, from: 'end' }, ease: 'power2.in', duration: 0.35 },
           0
         )
-        .to('.hero-bg', { yPercent: -12, duration: 1, ease: 'none' }, 0)
-        .to('.hero-overlay', { opacity: 0.85, duration: 0.5, ease: 'none' }, 0.1)
+        // Atmospheric overlay cross-fade into services
+        .to('.hero-overlay', { opacity: 0.88, duration: 0.55, ease: 'none' }, 0.15)
         .fromTo('.services-title', { y: titleY, opacity: 0, filter: 'blur(6px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', ease: 'power3.out', duration: 0.25 }, 0.3)
         .fromTo('.services-feature', { y: featureY, opacity: 0, scale: 0.97 }, { y: 0, opacity: 1, scale: 1, ease: 'power3.out', duration: 0.35 }, 0.4);
 

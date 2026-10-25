@@ -350,7 +350,8 @@ svg {
   height: 100%;
   object-fit: cover;
   object-position: center center;
-  transition: opacity 1.4s ease, transform 18s linear
+  transition: opacity 1.4s ease;
+  will-change: transform;
 }
 
 .city-tower {
@@ -6623,7 +6624,6 @@ body {
 
 .hero-environment {
   inset: 0;
-  transform: none !important
 }
 
 .hero-art {
@@ -6633,7 +6633,6 @@ body {
   object-fit: cover;
   object-position: 50% 50%;
   mask-image: none;
-  transform: none !important
 }
 
 .hero .glass-tower {
@@ -9480,6 +9479,16 @@ body {
   mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
   -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
   will-change: transform;
+}
+
+.hero-art {
+  will-change: transform;
+  transform-origin: 54% 45%;
+}
+
+.hero-copy {
+  will-change: transform, opacity, filter;
+  transform-origin: center center;
 }
 
 .hero-overlay {
